@@ -1,0 +1,153 @@
+/* ── Container ─────────────────────────────────────────────────────────────── */
+.jv-node {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    display: inline;
+}
+
+/* ── Depth indentation for child lists ─────────────────────────────────────── */
+.jv-children {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.25rem;
+    border-left: 1px solid #e0e5ee;
+}
+
+.jv-entry {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    padding: 0.05rem 0;
+}
+
+/* ── Keys ──────────────────────────────────────────────────────────────────── */
+.jv-key {
+    color: #5e4db2;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.jv-colon {
+    color: #44546f;
+    flex-shrink: 0;
+}
+
+.jv-comma {
+    color: #44546f;
+}
+
+/* ── Primitive value types ─────────────────────────────────────────────────── */
+.jv-primitive {
+    word-break: break-all;
+}
+
+.jv-type-string  { color: #216e4e; } /* green  */
+.jv-type-number  { color: #0747a6; } /* blue   */
+.jv-type-boolean { color: #bf2600; } /* red    */
+.jv-type-null    { color: #7a869a; font-style: italic; } /* grey  */
+
+/* ── Brackets ──────────────────────────────────────────────────────────────── */
+.jv-bracket {
+    color: #44546f;
+    font-weight: 600;
+}
+
+.jv-bracket-open {
+    margin-right: 0.125rem;
+}
+
+.jv-bracket-close {
+    display: block;
+}
+
+/* ── Toggle row ────────────────────────────────────────────────────────────── */
+.jv-toggle-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+    flex-wrap: nowrap;
+}
+
+/* ── Toggle button ─────────────────────────────────────────────────────────── */
+.jv-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    margin: 0 0.125rem 0 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    flex-shrink: 0;
+    color: #44546f;
+    transition: background 0.1s;
+}
+
+.jv-toggle-btn:hover {
+    background: #e0e5ee;
+}
+
+.jv-toggle-btn:focus {
+    outline: 2px solid #0176d3;
+    outline-offset: 1px;
+}
+
+/* ── Toggle arrow icons (CSS-only) ────────────────────────────────────────── */
+.jv-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+}
+
+.jv-icon-down {
+    border-left:  4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top:   5px solid currentColor;
+}
+
+.jv-icon-right {
+    border-top:    4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left:   5px solid currentColor;
+}
+
+/* ── Collapsed preview text ────────────────────────────────────────────────── */
+.jv-collapsed-preview {
+    display: inline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    color: #7a869a;
+    font-style: italic;
+    padding: 0 0.25rem;
+}
+
+.jv-collapsed-preview:hover {
+    color: #0176d3;
+    text-decoration: underline;
+}
+
+/* ── Key count comment ─────────────────────────────────────────────────────── */
+.jv-count {
+    color: #7a869a;
+    font-style: italic;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}
+
+/* ── Depth-based left-border color cycling ─────────────────────────────────── */
+.jv-depth-1 > .jv-children { border-left-color: #c9b5f7; }
+.jv-depth-2 > .jv-children { border-left-color: #aed9f1; }
+.jv-depth-3 > .jv-children { border-left-color: #a9d5a2; }
+.jv-depth-4 > .jv-children { border-left-color: #f7c5ab; }
+.jv-depth-5 > .jv-children { border-left-color: #f0d98f; }
+.jv-depth-6 > .jv-children { border-left-color: #c9b5f7; }
+.jv-depth-7 > .jv-children { border-left-color: #aed9f1; }
+.jv-depth-8 > .jv-children { border-left-color: #a9d5a2; }

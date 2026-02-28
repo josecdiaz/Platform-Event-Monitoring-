@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Main Platform Event Monitor dashboard — discover events, subscribe, and view live payloads</description>
+    <label>Event Monitor</label>
+    <flexiPage>Platform_Event_Monitor</flexiPage>
+    <motif>Custom92: Broadcast</motif>
+</CustomTab>

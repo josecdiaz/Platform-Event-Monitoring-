@@ -1,0 +1,65 @@
+<template>
+    <div class={containerClass}>
+
+        <!-- ── PRIMITIVE VALUE ── -->
+        <template lwc:if={isPrimitive}>
+            <span class={primitiveClass}>{displayValue}</span>
+        </template>
+
+        <!-- ── OBJECT / ARRAY ── -->
+        <template lwc:if={isComplex}>
+
+            <!-- Toggle button + opening bracket -->
+            <span class="jv-toggle-row">
+                <button
+                    class="jv-toggle-btn"
+                    title={toggleTitle}
+                    onclick={handleToggle}
+                    aria-expanded={isExpandedStr}
+                >
+                    <span class={toggleIconClass}></span>
+                </button>
+                <span class="jv-bracket jv-bracket-open">{openBracket}</span>
+
+                <!-- Collapsed preview inline -->
+                <template lwc:if={isCollapsed}>
+                    <button class="jv-collapsed-preview" onclick={handleToggle}>
+                        {collapsedPreview}
+                    </button>
+                    <span class="jv-bracket jv-bracket-close">{closeBracket}</span>
+                    <span class="jv-count">{itemCountLabel}</span>
+                </template>
+            </span>
+
+            <!-- Expanded children -->
+            <template lwc:if={isExpanded}>
+                <ul class="jv-children" role="list">
+                    <template for:each={entries} for:item="entry">
+                        <li key={entry.id} class="jv-entry">
+
+                            <!-- Key (objects only) -->
+                            <template lwc:if={entry.showKey}>
+                                <span class="jv-key">"{entry.displayKey}"</span>
+                                <span class="jv-colon">:&nbsp;</span>
+                            </template>
+
+                            <!-- Recursive child -->
+                            <c-json-viewer
+                                value={entry.value}
+                                depth={childDepth}
+                            ></c-json-viewer>
+
+                            <!-- Comma separator -->
+                            <template lwc:if={entry.hasComma}>
+                                <span class="jv-comma">,</span>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+                <span class="jv-bracket jv-bracket-close">{closeBracket}</span>
+            </template>
+
+        </template>
+
+    </div>
+</template>

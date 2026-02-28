@@ -1,0 +1,294 @@
+<template>
+    <div class="pem-root">
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             HEADER
+        ════════════════════════════════════════════════════════════════════════ -->
+        <div class="pem-header slds-card__header">
+            <div class="pem-header-title">
+                <lightning-icon icon-name="utility:broadcast" size="small" class="pem-header-icon"></lightning-icon>
+                <h1 class="slds-text-heading_medium">Platform Event Monitor</h1>
+                <template lwc:if={empUnavailable}>
+                    <lightning-badge label="EMP API Unavailable" class="pem-badge-warn"></lightning-badge>
+                </template>
+            </div>
+
+            <!-- Filter bar -->
+            <div class="pem-filters">
+                <lightning-input
+                    type="search"
+                    label="Search events"
+                    variant="label-hidden"
+                    placeholder="Search by name or type…"
+                    value={searchTerm}
+                    onchange={handleSearch}
+                    class="pem-search"
+                ></lightning-input>
+
+                <lightning-combobox
+                    label="Type"
+                    variant="label-inline"
+                    value={selectedType}
+                    options={typeOptions}
+                    onchange={handleTypeChange}
+                    class="pem-type-filter"
+                ></lightning-combobox>
+
+                <lightning-button
+                    label="Refresh"
+                    icon-name="utility:refresh"
+                    onclick={handleRefresh}
+                    class="pem-btn-refresh"
+                ></lightning-button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             LOADING / ERROR STATES
+        ════════════════════════════════════════════════════════════════════════ -->
+        <template lwc:if={isLoading}>
+            <div class="pem-center">
+                <lightning-spinner alternative-text="Loading platform events…" size="medium"></lightning-spinner>
+                <p class="slds-text-body_small slds-m-top_small">Discovering platform events in your org…</p>
+            </div>
+        </template>
+
+        <template lwc:if={hasError}>
+            <div class="pem-error-banner slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <lightning-icon icon-name="utility:error" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                <span>{errorMessage}</span>
+            </div>
+        </template>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             EVENT CATALOG TABLE
+        ════════════════════════════════════════════════════════════════════════ -->
+        <template lwc:if={showTable}>
+            <div class="pem-table-wrapper">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered pem-table" role="grid">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col" class="pem-th pem-th-name">
+                                <div class="slds-truncate" title="Event Name">Event Name</div>
+                            </th>
+                            <th scope="col" class="pem-th pem-th-label">
+                                <div class="slds-truncate" title="Label">Label</div>
+                            </th>
+                            <th scope="col" class="pem-th pem-th-type">
+                                <div class="slds-truncate" title="Type">Type</div>
+                            </th>
+                            <th scope="col" class="pem-th pem-th-channel">
+                                <div class="slds-truncate" title="Channel">Channel</div>
+                            </th>
+                            <th scope="col" class="pem-th pem-th-count">
+                                <div class="slds-truncate" title="Events Received">Received</div>
+                            </th>
+                            <th scope="col" class="pem-th pem-th-action">
+                                <div class="slds-truncate" title="Subscribe">Subscribe</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={filteredEvents} for:item="evt">
+                            <tr key={evt.channel} class={evt.rowClass}>
+                                <td>
+                                    <div class="slds-truncate pem-api-name" title={evt.apiName}>
+                                        <code>{evt.apiName}</code>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate" title={evt.label}>{evt.label}</div>
+                                </td>
+                                <td>
+                                    <lightning-badge
+                                        label={evt.eventType}
+                                        class={evt.typeBadgeClass}
+                                    ></lightning-badge>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate pem-channel" title={evt.channel}>
+                                        <code>{evt.channel}</code>
+                                    </div>
+                                </td>
+                                <td class="pem-td-count">
+                                    <template lwc:if={evt.eventCount}>
+                                        <lightning-badge label={evt.eventCountLabel} class="pem-badge-count"></lightning-badge>
+                                    </template>
+                                    <template lwc:else>
+                                        <span class="pem-no-events">—</span>
+                                    </template>
+                                </td>
+                                <td>
+                                    <template lwc:if={evt.isSubscribed}>
+                                        <lightning-button
+                                            label="Unsubscribe"
+                                            variant="destructive-text"
+                                            icon-name="utility:stop"
+                                            data-channel={evt.channel}
+                                            onclick={handleUnsubscribe}
+                                        ></lightning-button>
+                                    </template>
+                                    <template lwc:else>
+                                        <lightning-button
+                                            label="Subscribe"
+                                            variant="brand"
+                                            icon-name="utility:play"
+                                            data-channel={evt.channel}
+                                            data-apiname={evt.apiName}
+                                            data-eventtype={evt.eventType}
+                                            onclick={handleSubscribe}
+                                        ></lightning-button>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+                <template lwc:if={noResults}>
+                    <div class="pem-empty-state">
+                        <lightning-icon icon-name="utility:search" size="large" class="pem-empty-icon"></lightning-icon>
+                        <p class="slds-text-heading_small">No events match your filter</p>
+                        <p class="slds-text-body_small">Try a different search term or event type</p>
+                    </div>
+                </template>
+
+                <div class="pem-table-footer">
+                    <span class="slds-text-body_small pem-count-text">
+                        Showing {filteredCount} of {totalCount} events
+                    </span>
+                </div>
+            </div>
+        </template>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             LIVE EVENTS PANEL (shown when at least one subscription is active)
+        ════════════════════════════════════════════════════════════════════════ -->
+        <template lwc:if={hasSubscriptions}>
+            <div class="pem-live-panel slds-card slds-m-top_medium">
+                <div class="pem-live-header">
+                    <lightning-icon icon-name="utility:live_message" size="small" class="pem-live-icon pem-pulse"></lightning-icon>
+                    <h2 class="slds-text-heading_small">Live Events</h2>
+                    <div class="pem-tab-strip">
+                        <template for:each={subscribedChannels} for:item="ch">
+                            <button
+                                key={ch.channel}
+                                class={ch.tabClass}
+                                data-channel={ch.channel}
+                                onclick={handleTabSelect}
+                            >
+                                <code>{ch.apiName}</code>
+                                <template lwc:if={ch.eventCount}>
+                                    <span class="pem-tab-badge">{ch.eventCount}</span>
+                                </template>
+                            </button>
+                        </template>
+                    </div>
+                    <div class="pem-live-actions">
+                        <lightning-button-icon
+                            icon-name="utility:delete"
+                            variant="border-filled"
+                            alternative-text="Clear logs for this channel"
+                            title="Clear logs for this channel"
+                            onclick={handleClearLogs}
+                            class="pem-btn-clear"
+                        ></lightning-button-icon>
+                    </div>
+                </div>
+
+                <!-- Event list for active tab -->
+                <div class="pem-event-list">
+                    <template lwc:if={noLiveEvents}>
+                        <div class="pem-waiting">
+                            <lightning-spinner alternative-text="Waiting for events…" size="small"></lightning-spinner>
+                            <p class="slds-text-body_small">Waiting for events on <code>{activeTab}</code>…</p>
+                        </div>
+                    </template>
+
+                    <template for:each={activeTabEvents} for:item="event">
+                        <div key={event.id} class="pem-event-card">
+                            <div class="pem-event-card-header">
+                                <div class="pem-event-meta">
+                                    <lightning-icon icon-name="utility:event" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                    <span class="pem-event-time">{event.receivedAt}</span>
+                                    <span class="pem-event-sep">·</span>
+                                    <span class="pem-event-replay">Replay: <code>{event.replayId}</code></span>
+                                    <template lwc:if={event.publishedById}>
+                                        <span class="pem-event-sep">·</span>
+                                        <span class="pem-event-publisher">By: <code>{event.publishedById}</code></span>
+                                    </template>
+                                </div>
+                                <div class="pem-event-actions">
+                                    <lightning-button-icon
+                                        icon-name="utility:new_window"
+                                        variant="border"
+                                        size="x-small"
+                                        alternative-text="Open log record"
+                                        title="Open log record"
+                                        data-record-id={event.logRecordId}
+                                        onclick={handleOpenRecord}
+                                    ></lightning-button-icon>
+                                </div>
+                            </div>
+
+                            <!-- Payload JSON Viewer -->
+                            <div class="pem-payload-section">
+                                <div class="pem-payload-label">
+                                    <button
+                                        class="pem-payload-toggle"
+                                        data-event-id={event.id}
+                                        onclick={handlePayloadToggle}
+                                        aria-expanded={event.payloadExpandedStr}
+                                    >
+                                        <span class={event.payloadToggleIconClass}></span>
+                                        Payload
+                                    </button>
+                                </div>
+                                <template lwc:if={event.payloadExpanded}>
+                                    <div class="pem-payload-viewer">
+                                        <c-json-viewer value={event.payloadObject} depth="0"></c-json-viewer>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Full message JSON viewer (collapsible) -->
+                            <div class="pem-payload-section">
+                                <div class="pem-payload-label">
+                                    <button
+                                        class="pem-payload-toggle pem-payload-toggle-secondary"
+                                        data-event-id={event.id}
+                                        onclick={handleEnvelopeToggle}
+                                        aria-expanded={event.envelopeExpandedStr}
+                                    >
+                                        <span class={event.envelopeToggleIconClass}></span>
+                                        Full Message Envelope
+                                    </button>
+                                </div>
+                                <template lwc:if={event.envelopeExpanded}>
+                                    <div class="pem-payload-viewer pem-payload-viewer-secondary">
+                                        <c-json-viewer value={event.fullMessage} depth="0"></c-json-viewer>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- Hidden subscriber components (one per active subscription) -->
+        <template for:each={subscriberComponents} for:item="sub">
+            <c-platform-event-subscriber
+                key={sub.channel}
+                channel={sub.channel}
+                replay-id={sub.replayId}
+                data-channel={sub.channel}
+                oneventreceived={handleEventReceived}
+                onsubscribed={handleSubscribeConfirmed}
+                onunsubscribed={handleUnsubscribeConfirmed}
+                onsubscribeerror={handleSubscribeError}
+            ></c-platform-event-subscriber>
+        </template>
+
+    </div>
+</template>

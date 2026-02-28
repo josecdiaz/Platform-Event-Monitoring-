@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Replay_ID__c</fullName>
+    <description>The CometD replay ID assigned by Salesforce for event replay. Use -1 for tip, -2 for all retained events.</description>
+    <externalId>false</externalId>
+    <label>Replay ID</label>
+    <length>50</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

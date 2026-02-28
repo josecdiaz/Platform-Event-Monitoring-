@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Standard_Platform_Event</fullName>
+    <active>true</active>
+    <description>Record type for standard Salesforce-delivered platform events (LoginEvent, ApiEvent, etc.). Highlights channel, replay ID, publisher information, header data, and payload.</description>
+    <label>Standard Platform Event</label>
+    <picklistValues>
+        <picklist>Event_Type__c</picklist>
+        <values>
+            <fullName>Standard Platform Event</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Custom Platform Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Change Data Capture</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Subscription_Status__c</picklist>
+        <values>
+            <fullName>Received</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Processed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Error</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Change_Type__c</picklist>
+        <values>
+            <fullName>CREATE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UPDATE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DELETE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UNDELETE</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>
