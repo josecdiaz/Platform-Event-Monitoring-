@@ -21,7 +21,7 @@ public with sharing class PlatformEventLogController {
     // ──────────────────────────────────────────────────────────────────────────
     // Lazy-loaded record type ID map
     // ──────────────────────────────────────────────────────────────────────────
-    private static Map<String, Id> recordTypeCache;
+    @TestVisible private static Map<String, Id> recordTypeCache;
 
     private static Map<String, Id> getRecordTypeMap() {
         if (recordTypeCache == null) {
