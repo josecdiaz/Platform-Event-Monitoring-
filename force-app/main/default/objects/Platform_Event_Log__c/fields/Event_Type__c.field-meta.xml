@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Type__c</fullName>
+    <description>Category of the platform event: Standard Platform Event, Change Data Capture, or Custom Platform Event.</description>
+    <externalId>false</externalId>
+    <label>Event Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Custom Platform Event</fullName>
+                <default>false</default>
+                <label>Custom Platform Event</label>
+            </value>
+            <value>
+                <fullName>Change Data Capture</fullName>
+                <default>false</default>
+                <label>Change Data Capture</label>
+            </value>
+            <value>
+                <fullName>Standard Platform Event</fullName>
+                <default>false</default>
+                <label>Standard Platform Event</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

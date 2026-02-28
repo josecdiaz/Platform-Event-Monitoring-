@@ -1,0 +1,23 @@
+# Salesforce
+.sfdx/
+.sf/
+*.lock
+node_modules/
+
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# Local env
+.env
+.env.local

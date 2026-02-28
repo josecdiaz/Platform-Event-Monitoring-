@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Record detail page for Platform Event Log. Displays record-type-specific fields and renders the JSON payload using the interactive JSON Viewer LWC.</description>
+    <masterLabel>Platform Event Log Record Page</masterLabel>
+    <pageTemplate>RecordPage3Col</pageTemplate>
+    <regions>
+        <name>left</name>
+        <type>Region</type>
+        <mode>append</mode>
+    </regions>
+    <regions>
+        <name>right</name>
+        <type>Region</type>
+        <mode>append</mode>
+    </regions>
+    <regions>
+        <name>header</name>
+        <type>Region</type>
+        <mode>append</mode>
+    </regions>
+    <flexiPageRegions>
+        <name>header</name>
+        <type>Region</type>
+        <componentInstances>
+            <componentInstance>
+                <componentName>flexipage:recordHeader</componentName>
+            </componentInstance>
+        </componentInstances>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>main</name>
+        <type>Region</type>
+        <componentInstances>
+            <componentInstance>
+                <componentName>flexipage:recordDetail</componentName>
+            </componentInstance>
+            <componentInstance>
+                <componentInstanceProperty>
+                    <name>label</name>
+                    <value>Payload Viewer</value>
+                </componentInstanceProperty>
+                <componentInstanceProperty>
+                    <name>value</name>
+                    <value>{!v.sObject.Payload__c}</value>
+                </componentInstanceProperty>
+                <componentName>c:jsonViewer</componentName>
+            </componentInstance>
+        </componentInstances>
+    </flexiPageRegions>
+    <sobjectType>Platform_Event_Log__c</sobjectType>
+    <type>RecordPage</type>
+</FlexiPage>
