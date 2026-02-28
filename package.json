@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint force-app/**/*.js",
     "test": "jest --coverage",
-    "deploy": "sf project deploy start",
+    "deploy": "sf project deploy start --source-dir force-app --wait 30 --test-level RunLocalTests",
+    "deploy:script": "bash scripts/deploy.sh",
     "org:create": "sf org create scratch -f config/project-scratch-def.json -a PlatformEventMonitor --duration-days 30"
   },
   "devDependencies": {

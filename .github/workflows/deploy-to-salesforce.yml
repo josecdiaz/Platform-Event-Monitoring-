@@ -1,0 +1,49 @@
+name: Deploy to Salesforce Org
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      target_org:
+        description: 'Target org alias or username'
+        required: false
+        default: 'production'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      - name: Authenticate to Salesforce via SFDX URL
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > /tmp/sfdx_auth_url.txt
+          sf org login sfdx-url --sfdx-url-file /tmp/sfdx_auth_url.txt --alias target-org --set-default
+          rm /tmp/sfdx_auth_url.txt
+
+      - name: Verify org connection
+        run: sf org display --target-org target-org
+
+      - name: Deploy source to org
+        run: |
+          sf project deploy start \
+            --source-dir force-app \
+            --target-org target-org \
+            --wait 30 \
+            --test-level RunLocalTests
+
+      - name: Show deployment result
+        if: always()
+        run: sf project deploy report --target-org target-org
