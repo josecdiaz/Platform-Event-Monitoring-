@@ -46,4 +46,4 @@ jobs:
 
       - name: Show deployment result
         if: always()
-        run: sf project deploy report --target-org target-org
+        run: sf project deploy report --target-org target-org --use-most-recent
