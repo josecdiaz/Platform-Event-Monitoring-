@@ -37,6 +37,7 @@ jobs:
         run: sf org display --target-org target-org
 
       - name: Deploy source to org
+        id: deploy_source_to_org
         run: |
           sf project deploy start \
             --source-dir force-app \
@@ -45,5 +46,5 @@ jobs:
             --test-level RunLocalTests
 
       - name: Show deployment result
-        if: always()
+        if: ${{ success() && steps.deploy_source_to_org.conclusion == 'success' }}
         run: sf project deploy report --target-org target-org --use-most-recent
